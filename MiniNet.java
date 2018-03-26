@@ -1,5 +1,6 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+
+import java.util.*;
+
 
 public class MiniNet {
 	
@@ -20,6 +21,7 @@ public class MiniNet {
 		
 		Scanner reader = new Scanner(System.in);
 		
+		System.out.println(" ");
 		System.out.println("            MiniNet Menu");
 		System.out.println("=========================================");
 		System.out.println(" 1. List everyone");
@@ -30,41 +32,79 @@ public class MiniNet {
 		
 		String input = reader.nextLine();
 			
-		
+		try {
 		if (Integer.parseInt(input) == 1) {
-			System.out.println(profiles.toString());
+			
+			listProfiles();
+			
+			System.out.println("======================================");
+			System.out.println(" ");
+
+			System.out.println(" Press Enter to go Back to Menu");
+			input = reader.nextLine();
+			viewMenu();
+			
 		}
-		if (Integer.parseInt(input) == 2) {
-			viewProfile();	
+		else if (Integer.parseInt(input) == 2) {
+			enterProfile();	
 		}
-		if (Integer.parseInt(input) == 3) {
+		else if (Integer.parseInt(input) == 3) {
 			searchTwoFriends();	
 		}
 		
-		if (Integer.parseInt(input) == 4) {
+		else if (Integer.parseInt(input) == 4) {
 			addProfile();	
 		}
 		
-		
-		if (input == "?") {
+		else if (input == "?") {
 			System.out.println(" Thank You for Using MiniNet");	
+			System.exit(0);
+		} else {
+			System.out.println(" Please Enter a valid Input");
+			viewMenu();
+			
+		}
+		
+		} catch (Exception e) {
+			System.out.println(" Please Enter a valid Input");
+			viewMenu();
+			
 		}
 		
 	
 	}
 	
-	
-	public void viewProfile() {
+	public void enterProfile() {
 		Scanner reader = new Scanner(System.in);
 		System.out.println(" Enter the Profile Name");
 		String name = reader.nextLine();
+		viewProfile(name);
+	
+	}
+	
+
+	
+	
+	public void viewProfile(String name) {
 		
+		
+		Scanner reader = new Scanner(System.in);
+		System.out.println(" ");
 		System.out.println("           " + name);
 		System.out.println("=========================================");
 		System.out.println(" Username : "+ profiles.get(index.indexOf(name)).getUName());
 		System.out.println(" Age : "+ profiles.get(index.indexOf(name)).getAge());
 		System.out.println(" Status : " + profiles.get(index.indexOf(name)).getStatus());
 		System.out.println(" Friend List: " + profiles.get(index.indexOf(name)).printAllFriends());
+		
+		if (profiles.get(index.indexOf(name)).getParents() != null) {
+			System.out.println(" Parents: " + profiles.get(index.indexOf(name)).printParents());
+		}
+		if (profiles.get(index.indexOf(name)).getChildren() != null) {
+			System.out.println(" Children: " + profiles.get(index.indexOf(name)).printChildren());
+		}
+		
+		System.out.println("        ");
 		
 		System.out.println("1. To Add a Friend");
 		System.out.println("2. To Delete Profile");
@@ -76,16 +116,16 @@ public class MiniNet {
 		
 		String input = reader.nextLine();
 			
-		
+		try{
 		if (Integer.parseInt(input) == 1) {
 			addingFriends(name);
 		}
 		
 		
-		if (Integer.parseInt(input) == 2) {
+		else if (Integer.parseInt(input) == 2) {
 			removeMyProfile(name);
 		}
-		if (Integer.parseInt(input) == 3) {
+		else if (Integer.parseInt(input) == 3) {
 			System.out.println("Enter Friend's Name");
 			input = reader.nextLine();
 			
@@ -95,12 +135,12 @@ public class MiniNet {
 			System.out.println(input + " And you are no longer friends");
 			System.out.println(" Click enter to go back to Profile");
 			input = reader.nextLine();
-			viewProfile();
+			viewProfile(name);
 
 			
-			;	
+				
 		}
-		if (Integer.parseInt(input) == 4) {
+		else if (Integer.parseInt(input) == 4) {
 			
 			System.out.println("Enter the Status");
 			input = reader.nextLine();
@@ -108,10 +148,10 @@ public class MiniNet {
 			System.out.println(" Your Status is updated to" + input);
 			System.out.println(" Click enter to go back to Profile");
 			input = reader.nextLine();
-			viewProfile();
+			viewProfile(name);
 		}
 		
-		if (Integer.parseInt(input) == 5) {
+		else if (Integer.parseInt(input) == 5) {
 			
 			System.out.println("Enter the Display Picture");
 			input = reader.nextLine();
@@ -119,11 +159,34 @@ public class MiniNet {
 			System.out.println(" Your Display is updated to" + input);
 			System.out.println(" Click enter to go back to Profile");
 			input = reader.nextLine();
-			viewProfile();
+			viewProfile(name);
 		}
 
-		if ((Integer.parseInt(input)) == 6) {
+		else if ((Integer.parseInt(input)) == 6) {
 			viewMenu();	
+		} 
+		else {
+			
+			System.out.println("Please Enter a Valid Input");
+			viewProfile(name);
+			}
+		}
+		
+		catch (Exception e) {
+			
+			System.out.println("Please Enter a Valid Input");
+			viewProfile(name);
+		}
+		
+		
+		
+	}
+	
+	
+	
+	public void listProfiles(){
+		for (int i = 0; i < index.size(); i++) {	
+			System.out.println("Profile "+ i + " : " + index.get(i));			
 		}
 		
 		
@@ -136,12 +199,10 @@ public class MiniNet {
 	
 	
 	
-	
-	
-	
-	
 	public void addProfile(){
 		//creating user
+		
+		try {
 		Scanner reader = new Scanner(System.in);
 		System.out.println("Please Enter the Username");
 		String username = reader.nextLine();
@@ -155,10 +216,35 @@ public class MiniNet {
 		profiles.add(user);
 		index.add(profilename);
 		
+		
+		if (age < 16) {
+			profiles.get(index.indexOf(profilename)).setParent();
+			
+			ArrayList<String> parents = profiles.get(index.indexOf(profilename)).getParents();
+			try {
+			for(int i = 0; i < parents.size(); i++) {		
+				  profiles.get(index.indexOf(parents.get(i))).setChildren(profilename);
+			}
+			}catch (Exception e) {
+				System.out.println("!!!!! Parents do not exist on MiniNet");
+				System.out.println("Press Enter to go back to Menu");
+				System.out.println("======================================");
+				age = reader.nextInt();
+				viewMenu();
+			}
+			
+		}
+
 		System.out.println("Profile has been Successfully added");
 		System.out.println("Click Enter to go back to Menu");
 		String input = reader.nextLine();
-		viewMenu();		
+		viewMenu();	
+		
+		
+		} catch(Exception e) {
+			System.out.println("Please enter a valid Input");
+			addProfile();
+		}
 		
     }
 	
@@ -214,7 +300,7 @@ public class MiniNet {
 		Scanner reader = new Scanner(System.in);
 		String input = reader.nextLine();
 
-		viewProfile();		
+		viewMenu();		
 		
     }
 	
@@ -222,8 +308,46 @@ public class MiniNet {
 
 	public void addingFriends(String name) {
 		//adding friends
+		try {
+		
+		Scanner reader = new Scanner(System.in);
+		String input;
+		if (profiles.get(index.indexOf(name)).getAge() <= 3) {
+			System.out.println("Sorry !! Infants cannot have friends");
+			System.out.println("Click Enter to go back to Profile");
+			
+			input = reader.nextLine();
+
+			viewProfile(name);
+			
+		} 
+		
+		if(profiles.get(index.indexOf(name)).getAge() < 16 && profiles.get(index.indexOf(name)).getAge() > 2) {
+			System.out.println("Please Enter the Profile Name of the Person");
+			String profilename = reader.nextLine();
+			
+			if(profiles.get(index.indexOf(profilename)).getAge() < 16 && Math.abs(profiles.get(index.indexOf(profilename)).getAge() - profiles.get(index.indexOf(name)).getAge()) <=3 ) {
+		
+			
+			profiles.get(index.indexOf(name)).addFriends(profilename);
+			profiles.get(index.indexOf(profilename)).addFriends(name);
+			
+			System.out.println(profilename + "has been successfully added as your friend");
+			System.out.println("Click Enter to go back to Profile");
+			
+			input = reader.nextLine();
+
+			viewProfile(name);
+			} else { 
+				System.out.println("Sorry!! You can only add People who are Dependents and elder or younger to you not more than 3 years");
+				System.out.println("Click Enter to go back to Profile");
 				
-		Scanner reader = new Scanner(System.in);	
+				input = reader.nextLine();
+
+				viewProfile(name);
+			}
+	
+		}else {
 		System.out.println("Please Enter the Profile Name of the Person");
 		String profilename = reader.nextLine();
 
@@ -233,9 +357,19 @@ public class MiniNet {
 		System.out.println(profilename + "has been successfully added as your friend");
 		System.out.println("Click Enter to go back to Profile");
 		
-		String input = reader.nextLine();
+		input = reader.nextLine();
 
-		viewProfile();
+		viewProfile(name);
+		}
+		} catch(Exception e) {
+			System.out.println("The Friend you entered do not exist on MiniNet");
+			
+			System.out.println("Click Enter to go back to Profile");
+			Scanner reader = new Scanner(System.in);
+			String input = reader.nextLine();
+
+			viewProfile(name);
+		}
 		
 	}
 	
