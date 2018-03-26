@@ -64,6 +64,15 @@ public void setParent() {
 
 }
 
+
+public void setdemoParent(String input1, String input2) {
+
+	parents.add(input1);
+	parents.add(input2);
+
+}
+
+
 public ArrayList<String> getParents() {
 	
 	return this.parents;
